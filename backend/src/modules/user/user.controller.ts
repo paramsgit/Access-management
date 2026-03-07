@@ -12,7 +12,13 @@ export class UserController {
 
   static login = async (req: Request, res: Response) => {
     try {
-      res.json(await UserService.login(req.body));
+      const data = await UserService.login(req.body);
+      res.cookie("access_token", data.token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+      });
+      res.json({ user: data.user, success: true });
     } catch (e: any) {
       res.status(401).json({ message: e.message });
     }
@@ -20,5 +26,9 @@ export class UserController {
 
   static getUsers = async (_: Request, res: Response) => {
     res.json(await UserService.getAll());
+  };
+
+  static getMe = async (req: Request, res: Response) => {
+    res.json(req.user);
   };
 }

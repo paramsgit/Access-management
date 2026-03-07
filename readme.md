@@ -120,3 +120,5 @@ The authorization system grows by extension, not modification.
 - Add comprehensive unit tests for policies
 
 ---
+
+npx prisma generate
