@@ -1,31 +1,46 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 
-// import UsersPage from "@/pages/users";
+import UsersPage from "@/pages/users";
 import FilesPage from "@/pages/files";
 
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ProtectedRoute } from "./components/routes/ProtectedRoute";
 import { useAuthStore } from "@/store/auth.store";
 import LoginPage from "./pages/auth/login";
+import { PublicRoute } from "./components/routes/PublicRoute";
+import Layout from "./components/custom/Layout";
+import { SidebarProvider } from "./components/ui/sidebar";
 
 export default function App() {
+  const checkAuth = useAuthStore((s) => s.checkAuth);
+
   useEffect(() => {
-    useAuthStore.getState().checkAuth();
-  }, []);
+    checkAuth();
+  }, [checkAuth]);
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<LoginPage />} />
+      <SidebarProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to="/home" replace />} />
 
-        {/* <Route element={<ProtectedRoute />}>
-          <Route path="/users" element={<UsersPage />} />
-          <Route path="/files" element={<FilesPage />} />
-        </Route> */}
+          {/* Public routes */}
+          <Route element={<PublicRoute />}>
+            <Route path="/login" element={<LoginPage />} />
+          </Route>
 
-        {/* <Route path="*" element={<Navigate to="/users" replace />} /> */}
-      </Routes>
+          {/* Protected routes */}
+
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              <Route path="/home" element={<UsersPage />} />
+              <Route path="/files" element={<FilesPage />} />
+            </Route>
+          </Route>
+
+          <Route path="*" element={<Navigate to="/home" replace />} />
+        </Routes>
+      </SidebarProvider>
     </BrowserRouter>
   );
 }

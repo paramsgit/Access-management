@@ -3,6 +3,7 @@ import { useAuthStore } from "@/store/auth.store";
 
 export const ProtectedRoute = () => {
   const { user, loading } = useAuthStore();
+  console.log(user);
 
   if (loading) return null;
 

@@ -2,7 +2,6 @@ import { Request } from "express";
 
 export default class TokenExtractor {
   static getToken(req: Request): string | null {
-    console.log(req.cookies);
     if (req.cookies?.access_token) {
       return req.cookies.access_token;
     }

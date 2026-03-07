@@ -23,6 +23,19 @@ export class UserController {
       res.status(401).json({ message: e.message });
     }
   };
+  static logout = async (_: Request, res: Response) => {
+    try {
+      res.clearCookie("access_token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+      });
+
+      res.json({ success: true, message: "Logged out successfully" });
+    } catch (e: any) {
+      res.status(500).json({ message: e.message });
+    }
+  };
 
   static getUsers = async (_: Request, res: Response) => {
     res.json(await UserService.getAll());

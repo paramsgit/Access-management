@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import * as authApi from "@/api/auth.api";
+import type { User } from "@/api/users.api";
 
 interface AuthState {
-  user: any | null;
+  user: User | null;
   loading: boolean;
 
   checkAuth: () => Promise<void>;
@@ -17,7 +18,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   checkAuth: async () => {
     try {
       const data = await authApi.getMe();
-      set({ user: data.user });
+      console.log(data);
+      set({ user: data });
     } catch {
       set({ user: null });
     } finally {

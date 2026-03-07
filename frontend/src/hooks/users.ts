@@ -1,26 +1,47 @@
-// import { useEffect, useState } from "react";
-// import { getUsers, type User } from "@/services/users.service";
+import { useEffect, useState } from "react";
+import { getUsers, type User } from "@/api/users.api";
 
-// export function useUsers() {
-//   const [users, setUsers] = useState<User[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
+type UseUsersResult = {
+  users: User[];
+  loading: boolean;
+  error: string | null;
+};
 
-//   useEffect(() => {
-//     const fetchUsers = async () => {
-//       try {
-//         setLoading(true);
-//         const data = await getUsers();
-//         setUsers(data);
-//       } catch (err) {
-//         setError("Failed to load users");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
+export function useUsers(): UseUsersResult {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-//     fetchUsers();
-//   }, []);
+  useEffect(() => {
+    let isMounted = true;
 
-//   return { users, loading, error };
-// }
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const data = await getUsers();
+
+        if (isMounted) {
+          setUsers(data);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Failed to load users");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchUsers();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  return { users, loading, error };
+}

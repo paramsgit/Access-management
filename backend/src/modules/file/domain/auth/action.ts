@@ -1,3 +1,5 @@
+import { Roles } from "../../../../types/roles";
+
 // domain/auth/Action.ts
 export enum Action {
   CREATE_FILE = "CREATE_FILE",
@@ -10,6 +12,6 @@ export enum Action {
 
 export type AuthUser = {
   id: string;
-  role: "ADMIN" | "USER";
+  role: Roles;
   email?: string;
 };
