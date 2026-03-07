@@ -9,6 +9,8 @@ export class ReadFileUseCase {
     const file = await this.fileRepo.findById(fileId);
     if (!file) throw new Error("File not found");
 
+    console.log("user", user);
+
     fileAuthorizationService.authorize("file", user, file, Action.READ_FILE);
 
     return file;

@@ -1,8 +1,10 @@
+import { Roles } from "./roles";
+
 declare namespace Express {
   export interface Request {
     user: {
       id: string;
-      role: "ADMIN" | "USER";
+      role: Roles;
       profile?: any;
     };
   }

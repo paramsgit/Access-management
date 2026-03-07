@@ -18,7 +18,15 @@ export class UserService {
   }
 
   static async login(data: LoginDTO) {
-    const user = await prisma.user.findUnique({ where: { email: data.email } });
+    const user = await prisma.user.findUnique({
+      where: { email: data.email },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        name: true,
+      },
+    });
     if (!user || !(await comparePassword(data.password, user.password)))
       throw new Error("Invalid credentials");
 
@@ -28,6 +36,7 @@ export class UserService {
     };
   }
 
+  static async me() {}
   static async getAll() {
     return prisma.user.findMany({
       select: { id: true, name: true, email: true, createdAt: true },
