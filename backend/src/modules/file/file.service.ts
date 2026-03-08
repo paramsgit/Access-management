@@ -39,7 +39,7 @@ export class FileService {
         fileType: true,
         fileUrl: true,
         createdAt: true,
-        user: {
+        owner: {
           select: {
             id: true,
             email: true,
