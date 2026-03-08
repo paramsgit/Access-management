@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Users, Folder, ChevronsUpDown, LogOut } from "lucide-react";
+import { Home, Users, Folder, LogOut } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
