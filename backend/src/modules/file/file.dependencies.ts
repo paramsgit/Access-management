@@ -6,6 +6,8 @@ import { UpdateFileUseCase } from "./usecases/updateFile";
 import { DeleteFileUseCase } from "./usecases/deleteFile";
 import { GrantFilePermissionUseCase } from "./usecases/grantFilePermission";
 import { RevokeFilePermissionUseCase } from "./usecases/revokePermission";
+import { GetFilesWithPermissionUseCase } from "./usecases/getFilesWithPermission";
+import { GetAllFilesWithPermissionStatusUseCase } from "./usecases/getAllFilesWithPermissionStatus";
 
 const fileRepository = new PrismaFileRepository();
 
@@ -14,8 +16,14 @@ export const readFileUseCase = new ReadFileUseCase(fileRepository);
 export const updateFileUseCase = new UpdateFileUseCase(fileRepository);
 export const deleteFileUseCase = new DeleteFileUseCase(fileRepository);
 export const grantFilePermissionUseCase = new GrantFilePermissionUseCase(
-  fileRepository
+  fileRepository,
 );
 export const revokeFilePermissionUseCase = new RevokeFilePermissionUseCase(
-  fileRepository
+  fileRepository,
+);
+export const getFilesWithPermissionUseCase = new GetFilesWithPermissionUseCase(
+  fileRepository,
+);
+export const getAllFilesWithPermissionStatusUseCase = new GetAllFilesWithPermissionStatusUseCase(
+  fileRepository,
 );

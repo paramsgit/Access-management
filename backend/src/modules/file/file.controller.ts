@@ -7,8 +7,11 @@ import {
   deleteFileUseCase,
   grantFilePermissionUseCase,
   revokeFilePermissionUseCase,
+  getFilesWithPermissionUseCase,
+  getAllFilesWithPermissionStatusUseCase,
 } from "./file.dependencies";
 import { asyncHandler } from "../../utils/asyncHandler";
+import { Permissions } from "./file.types";
 
 // POST /api/files
 export const createFileController = asyncHandler(
@@ -20,7 +23,34 @@ export const createFileController = asyncHandler(
     });
 
     res.status(201).json(result);
-  }
+  },
+);
+
+// GET /api/files
+export const getFilesWithPermissionController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const permission = req.query.permission as Permissions | undefined;
+    const result = await getFilesWithPermissionUseCase.execute(
+      req.user.id,
+      permission,
+    );
+
+    res.json(result);
+  },
+);
+
+// GET /api/files/all
+export const getAllFilesWithPermissionStatusController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const permission = (req.query.permission ?? "READ") as Permissions;
+
+    const result = await getAllFilesWithPermissionStatusUseCase.execute(
+      req.user.id,
+      permission,
+    );
+
+    res.json(result);
+  },
 );
 
 // GET /api/files/:id
@@ -28,7 +58,7 @@ export const readFileController = asyncHandler(
   async (req: Request, res: Response) => {
     const result = await readFileUseCase.execute(req.user, req.params.id);
     res.json(result);
-  }
+  },
 );
 
 // PUT /api/files/:id
@@ -36,7 +66,7 @@ export const updateFileController = async (req: Request, res: Response) => {
   const result = await updateFileUseCase.execute(
     req.user,
     req.params.id,
-    req.body
+    req.body,
   );
 
   res.json(result);
@@ -55,7 +85,7 @@ export const grantFilePermissionController = asyncHandler(async (req, res) => {
     req.user,
     req.params.id,
     targetUserId,
-    permission
+    permission,
   );
 
   res.json(result);
@@ -68,7 +98,7 @@ export const revokeFilePermissionController = asyncHandler(async (req, res) => {
     req.user,
     req.params.id,
     targetUserId,
-    permission
+    permission,
   );
 
   res.json(result);

@@ -2,5 +2,6 @@ export interface CreateFileDTO {
   fileName: string;
   fileType: string;
   fileUrl: string;
-  userId: string;
+  ownerId: string;
 }
+export type Permissions = "READ" | "WRITE" | "DELETE";

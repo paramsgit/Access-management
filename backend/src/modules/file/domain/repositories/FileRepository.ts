@@ -16,12 +16,22 @@ export interface FileRepository {
   grantPermission(
     fileId: string,
     targetUserId: string,
-    permission: "READ" | "WRITE" | "DELETE"
+    permission: "READ" | "WRITE" | "DELETE",
   ): Promise<void>;
 
   revokePermission(
     fileId: string,
     targetUserId: string,
-    permission: "READ" | "WRITE" | "DELETE"
+    permission: "READ" | "WRITE" | "DELETE",
   ): Promise<void>;
+
+  getFilesWithPermission(
+    userId: string,
+    permission?: "READ" | "WRITE" | "DELETE",
+  ): Promise<any[]>;
+
+  getAllFilesWithPermissionStatus(
+    userId: string,
+    permission: "READ" | "WRITE" | "DELETE",
+  ): Promise<any[]>;
 }
