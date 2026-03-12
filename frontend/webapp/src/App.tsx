@@ -10,6 +10,7 @@ import LoginPage from "./pages/auth/login";
 import { PublicRoute } from "./components/routes/PublicRoute";
 import Layout from "./components/custom/Layout";
 import { SidebarProvider } from "./components/ui/sidebar";
+import TextEditorPage from "./pages/new/text";
 
 export default function App() {
   const checkAuth = useAuthStore((s) => s.checkAuth);
@@ -35,6 +36,7 @@ export default function App() {
             <Route element={<Layout />}>
               <Route path="/home" element={<UsersPage />} />
               <Route path="/files" element={<FilesPage />} />
+              <Route path="/files/new/text" element={<TextEditorPage />} />
             </Route>
           </Route>
 

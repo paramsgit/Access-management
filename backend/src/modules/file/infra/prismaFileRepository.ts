@@ -151,10 +151,15 @@ export class PrismaFileRepository implements FileRepository {
       },
     });
 
-    return files.map((file) => ({
-      id: file.id,
-      fileName: file.fileName,
-      isPermission: file.accesses[0]?.permissions.includes(permission) || false,
-    }));
+    return files.map((file) => {
+      const isPermission =
+        file.accesses[0]?.permissions.includes(permission) ||
+        file.ownerId === userId;
+      return {
+        id: file.id,
+        fileName: file.fileName,
+        isPermission,
+      };
+    });
   }
 }
