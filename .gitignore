@@ -2,3 +2,6 @@
 *dist
 *generated
 *.env
+
+.turbo
+.DS_Store

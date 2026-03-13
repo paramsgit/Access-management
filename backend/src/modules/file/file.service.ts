@@ -17,7 +17,7 @@ export class FileService {
 
   static async getFilesByUser(userId: string) {
     return prisma.file.findMany({
-      where: { userId },
+      where: { ownerId: userId },
       select: {
         id: true,
         fileName: true,
@@ -39,7 +39,7 @@ export class FileService {
         fileType: true,
         fileUrl: true,
         createdAt: true,
-        user: {
+        owner: {
           select: {
             id: true,
             email: true,
