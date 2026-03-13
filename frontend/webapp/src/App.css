@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@source "../../editor/src/**/*.{ts,tsx,js,jsx}";
+@source "../node_modules/text-editor/**/*.{js,jsx,ts,tsx}";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

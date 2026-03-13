@@ -27,7 +27,7 @@ export default function UsersPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-40">#</TableHead>
+              <TableHead className="w-40 ">#</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
             </TableRow>

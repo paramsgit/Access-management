@@ -1,5 +1,7 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFiles } from "@/hooks/useFiles";
+import { Link } from "react-router-dom";
 
 export default function FilesPage() {
   const { files, loading, error } = useFiles();
@@ -14,7 +16,12 @@ export default function FilesPage() {
 
   return (
     <div className="p-6 space-y-4">
-      <h1 className="text-2xl font-semibold">Files</h1>
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-semibold">Files</h1>
+        {/* <Link to={"/files/new/text"}>
+          <Button>New +</Button>
+        </Link> */}
+      </div>
 
       <div className="grid gap-4 md:grid-cols-3">
         {files.map((file) => (
