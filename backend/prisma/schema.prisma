@@ -27,16 +27,26 @@ model User {
 }
 
 model File {
-  id       String @id @default(uuid())
+  id       String  @id @default(uuid())
   fileName String
   fileType String
   fileUrl  String
+  isPublic Boolean @default(false)
 
   ownerId String
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
+  content   FileContent?
   accesses  FileAccess[]
   createdAt DateTime     @default(now())
+}
+
+model FileContent {
+  id   String @id @default(uuid())
+  data Json
+
+  fileId String @unique
+  file   File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
 }
 
 model FileAccess {

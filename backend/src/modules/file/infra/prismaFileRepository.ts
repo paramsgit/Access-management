@@ -1,5 +1,6 @@
 import { FileRepository } from "../domain/repositories/FileRepository";
 import prisma from "../../../db/prisma";
+import { defaultEditorJson } from "../../../config/defaultLexicalJson";
 
 export class PrismaFileRepository implements FileRepository {
   async findById(fileId: string) {
@@ -17,11 +18,34 @@ export class PrismaFileRepository implements FileRepository {
       permissions: file.accesses.flatMap((a) => a.permissions),
     };
   }
+  async getFileData(fileId: string) {
+    const file = await prisma.file.findUnique({
+      where: { id: fileId },
+      select: {
+        id: true,
+        content: {
+          select: { data: true },
+        },
+      },
+    });
+
+    if (!file) return null;
+
+    return file;
+  }
 
   async update(fileId: string, data: any) {
     return prisma.file.update({
       where: { id: fileId },
       data,
+    });
+  }
+  async updateFileContent(fileId: string, jsonData: any) {
+    return prisma.fileContent.update({
+      where: { fileId: fileId },
+      data: {
+        data: jsonData,
+      },
     });
   }
 
@@ -30,7 +54,16 @@ export class PrismaFileRepository implements FileRepository {
   }
 
   async create(data) {
-    return prisma.file.create({ data });
+    return prisma.file.create({
+      data: {
+        ...data,
+        content: {
+          create: {
+            data: defaultEditorJson,
+          },
+        },
+      },
+    });
   }
 
   async grantPermission(fileId, userId, permission) {

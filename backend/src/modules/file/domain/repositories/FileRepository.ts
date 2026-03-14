@@ -1,10 +1,12 @@
 import { User } from "../../../../generated/prisma/client";
-import { FileAccessEntity } from "../file/FileAccessEntity";
+import { FileAccessEntity, FileData } from "../file/FileAccessEntity";
 
 export interface FileRepository {
   findById(fileId: string): Promise<FileAccessEntity | null>;
   update(fileId: string, data: any): Promise<any>;
   delete(fileId: string): Promise<void>;
+  getFileData(fileId: string): Promise<FileData | null>;
+  updateFileContent(fileId: string, data: any): Promise<any>;
   create(data: {
     fileName: string;
     fileType: string;
