@@ -9,6 +9,7 @@ import {
   revokeFilePermissionUseCase,
   getFilesWithPermissionUseCase,
   getAllFilesWithPermissionStatusUseCase,
+  updateFileDataUseCase,
 } from "./file.dependencies";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { Permissions } from "./file.types";
@@ -64,6 +65,16 @@ export const readFileController = asyncHandler(
 // PUT /api/files/:id
 export const updateFileController = async (req: Request, res: Response) => {
   const result = await updateFileUseCase.execute(
+    req.user,
+    req.params.id,
+    req.body,
+  );
+
+  res.json(result);
+};
+// Post /api/files/:id/data
+export const updateFileDataController = async (req: Request, res: Response) => {
+  const result = await updateFileDataUseCase.execute(
     req.user,
     req.params.id,
     req.body,
