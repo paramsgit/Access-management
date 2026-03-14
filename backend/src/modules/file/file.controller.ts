@@ -57,7 +57,11 @@ export const getAllFilesWithPermissionStatusController = asyncHandler(
 // GET /api/files/:id
 export const readFileController = asyncHandler(
   async (req: Request, res: Response) => {
-    const result = await readFileUseCase.execute(req.user, req.params.id);
+    const result = await readFileUseCase.execute(
+      req.user,
+      req.params.id,
+      req.query,
+    );
     res.json(result);
   },
 );
