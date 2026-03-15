@@ -28,6 +28,7 @@ export default function FilesPage() {
           <Card key={file.id} className={file.isPermission ? "" : "opacity-60"}>
             <CardHeader>
               <CardTitle className="text-lg">{file.fileName}</CardTitle>
+              <Link to={`${file.id}`}>Go here</Link>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
               {file.isPermission ? (

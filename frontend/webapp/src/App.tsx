@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 
 import UsersPage from "@/pages/users";
-import FilesPage from "@/pages/files";
+import FilesPage from "@/pages/files/files";
 
 import { ProtectedRoute } from "./components/routes/ProtectedRoute";
 import { useAuthStore } from "@/store/auth.store";
@@ -10,7 +10,7 @@ import LoginPage from "./pages/auth/login";
 import { PublicRoute } from "./components/routes/PublicRoute";
 import Layout from "./components/custom/Layout";
 import { SidebarProvider } from "./components/ui/sidebar";
-import TextEditorPage from "./pages/new/text";
+import FileDetailsPage from "./pages/files/FileDetailsPage";
 
 export default function App() {
   const checkAuth = useAuthStore((s) => s.checkAuth);
@@ -36,7 +36,7 @@ export default function App() {
             <Route element={<Layout />}>
               <Route path="/home" element={<UsersPage />} />
               <Route path="/files" element={<FilesPage />} />
-              <Route path="/files/new/text" element={<TextEditorPage />} />
+              <Route path="/files/:id" element={<FileDetailsPage />} />
             </Route>
           </Route>
 
