@@ -94,6 +94,7 @@ export function Plugins({
   useMentionLookupService,
   isCompact,
   editorClassNames,
+  readOnly,
 }: {
   convertFilesToImageUrl?: (files: any) => Promise<any>;
   mentionsData?: { mentionName: string; label: string }[];
@@ -106,6 +107,7 @@ export function Plugins({
   }[];
   isCompact?: boolean;
   editorClassNames?: string;
+  readOnly?: boolean;
 }) {
   const [floatingAnchorElem, setFloatingAnchorElem] =
     useState<HTMLDivElement | null>(null);
@@ -121,7 +123,12 @@ export function Plugins({
     <div className="relative flex flex-col h-full">
       <ToolbarPlugin>
         {({ blockType }) => (
-          <div className="vertical-align-middle sticky top-0 z-10 flex flex-wrap items-center gap-2 border-b p-1">
+          <div
+            className={cn(
+              "vertical-align-middle sticky top-0 z-10 flex flex-wrap items-center gap-2 border-b p-1 transition-all ease-in-out duration-600",
+              readOnly && "pointer-events-none opacity-0 -translate-y-10",
+            )}
+          >
             <BlockFormatDropDown isCompact={isCompact}>
               <FormatParagraph />
               <FormatHeading levels={["h1", "h2", "h3"]} />
@@ -154,7 +161,13 @@ export function Plugins({
           </div>
         )}
       </ToolbarPlugin>
-      <div className="relative h-full flex-1 overflow-auto">
+
+      <div
+        className={cn(
+          "relative h-full flex-1 overflow-auto transition-all ease-in-out duration-600",
+          readOnly && "pointer-events-none -translate-y-10",
+        )}
+      >
         <AutoFocusPlugin />
         <RichTextPlugin
           contentEditable={
@@ -255,12 +268,17 @@ export function Plugins({
         <ListMaxIndentLevelPlugin />
       </div>
       <ActionsPlugin>
-        <div className="clear-both flex items-center justify-between gap-2 overflow-auto border-t p-1">
+        <div
+          className={cn(
+            "clear-both flex items-center justify-between gap-2 overflow-auto border-t p-1 transition-all ease-in-out duration-600",
+            readOnly && "pointer-events-none translate-y-10",
+          )}
+        >
           <div className="px-2">
             <CounterCharacterPlugin charset="UTF-16" />
           </div>
           <div className="flex flex-1 justify-end">
-            <EditModeTogglePlugin />
+            <EditModeTogglePlugin readOnly={readOnly} />
             <ClearEditorActionPlugin />
             <ClearEditorPlugin />
           </div>

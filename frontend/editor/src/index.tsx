@@ -14,6 +14,7 @@ type EditorPageProps = {
     label: string;
   }[];
   isCompact?: boolean;
+  readOnly?: boolean;
   editorClassNames?: string;
   html?: string;
 };
@@ -27,6 +28,7 @@ export default function EditorPage({
   isCompact,
   editorClassNames,
   html,
+  readOnly,
 }: EditorPageProps) {
   return (
     <Editor
@@ -40,6 +42,7 @@ export default function EditorPage({
       isCompact={isCompact}
       editorClassNames={editorClassNames}
       html={html}
+      readOnly={readOnly}
     />
   );
 }

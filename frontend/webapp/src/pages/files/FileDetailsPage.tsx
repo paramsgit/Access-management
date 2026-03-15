@@ -9,13 +9,14 @@ const FileDetailsPage = () => {
   const { id } = useParams();
   const { data: file, isLoading } = useFile(id!, "content");
   const { mutate: updateFile } = useUpdateFileContent();
+  const [readOnly, setReadOnly] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [data, setData] = useState({
-    json: file?.content?.data,
-  });
+  const [disableClose, setDisableClose] = useState(false);
+  const [data, setData] = useState<{ json: any } | null>(null);
 
   const handleSave = async () => {
-    console.log("--->", data);
+    setDisableClose(false);
+
     if (!updateFile || !id || !data?.json) {
       return;
     }
@@ -26,30 +27,50 @@ const FileDetailsPage = () => {
     setData({ json: file?.content?.data });
   }, [file]);
 
+  useEffect(() => {
+    if (data && !isEditing) {
+      setTimeout(() => {
+        setIsEditing(true);
+      }, 100);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (!data?.json || readOnly) return;
+    setDisableClose(true);
+    const timer = setTimeout(() => {
+      handleSave();
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [data]);
+
   if (isLoading) {
     return <>Loading...</>;
   }
 
   return (
-    <div>
+    <div className="h-full flex flex-col gap-2">
       <div className="flex flex-wrap justify-between w-full items-center">
-        <h1>Name : {file?.fileName}</h1>
+        <h1 className="text-lg font-semibold"> {file?.fileName}</h1>
         <Button
+          disabled={disableClose}
           onClick={() => {
-            if (isEditing) {
-              handleSave();
-            }
-
-            setIsEditing((prev) => !prev);
+            setReadOnly((prev) => !prev);
           }}
         >
-          {isEditing ? "Save" : "Edit"}
+          {!readOnly ? "Close" : "Edit"}
         </Button>
       </div>
-      <div></div>
-      {isEditing && (
-        <div>
-          <TextEditorSection data={data} setData={setData} />
+
+      {isEditing && data && (
+        <div className="flex-1">
+          <TextEditorSection
+            key={file?.id}
+            data={data}
+            setData={setData}
+            readOnly={readOnly}
+          />
         </div>
       )}
     </div>

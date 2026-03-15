@@ -83,6 +83,7 @@ export function Editor({
   isCompact,
   editorClassNames,
   html,
+  readOnly,
 }: {
   editorState?: EditorState;
   editorSerializedState?: SerializedEditorState;
@@ -98,6 +99,7 @@ export function Editor({
     label: string;
   }[];
   isCompact?: boolean;
+  readOnly?: boolean;
   editorClassNames?: string;
   html?: string;
 }) {
@@ -174,6 +176,7 @@ export function Editor({
             useMentionLookupService={useMentionLookupService}
             isCompact={isCompact}
             editorClassNames={editorClassNames}
+            readOnly={readOnly}
           />
 
           <SmartInitializer
