@@ -1,4 +1,4 @@
 const allowedOrigins = () => {
-  return ["http://localhost:5173", "http://localhost:5174"];
+  return JSON.parse(process.env.ALLOWED_ORIGINS || "[]");
 };
 export default allowedOrigins;
