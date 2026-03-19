@@ -7,11 +7,13 @@ on:
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
-  BACKEND_ECR: ${{ secrets.ECR_BACKEND_REPOSITORY }}
-  FRONTEND_ECR: ${{ secrets.ECR_FRONTEND_REPOSITORY }}
   ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
   BACKEND_SERVICE: ${{ secrets.ECS_BACKEND_SERVICE }}
   FRONTEND_SERVICE: ${{ secrets.ECS_FRONTEND_SERVICE }}
+  BACKEND_REPO: ${{ secrets.ECR_BACKEND_REPOSITORY }}
+  FRONTEND_REPO: ${{ secrets.ECR_FRONTEND_REPOSITORY }}
+  BACKEND_TASK: backend-task
+  FRONTEND_TASK: frontend-task
 
 jobs:
   deploy:
@@ -21,63 +23,79 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
+      - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Login to Amazon ECR
+      - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Set image tag
         run: echo "IMAGE_TAG=${GITHUB_SHA}" >> $GITHUB_ENV
 
-      # -------- Backend --------
+      # ---------- BACKEND ----------
 
-      - name: Build Backend Image
+      - name: Build and push backend image
         run: |
           docker build -t backend:$IMAGE_TAG ./backend
-          docker tag backend:$IMAGE_TAG $BACKEND_ECR:$IMAGE_TAG
-          docker push $BACKEND_ECR:$IMAGE_TAG
+          docker tag backend:$IMAGE_TAG $BACKEND_REPO:$IMAGE_TAG
+          docker push $BACKEND_REPO:$IMAGE_TAG
 
-      - name: Render Backend Task Definition
-        id: backend-task
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: backend-task-definition.json
-          container-name: backend
-          image: ${{ env.BACKEND_ECR }}:${{ env.IMAGE_TAG }}
+      - name: Get backend task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition $BACKEND_TASK \
+            --query taskDefinition > backend-task.json
 
-      - name: Deploy Backend to ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: ${{ steps.backend-task.outputs.task-definition }}
-          service: ${{ env.BACKEND_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+      - name: Update backend image
+        run: |
+          jq --arg IMAGE "$BACKEND_REPO:$IMAGE_TAG" \
+            '.containerDefinitions[0].image=$IMAGE' \
+            backend-task.json > backend-task-updated.json
 
-      # -------- Frontend --------
+      - name: Register backend task revision
+        run: |
+          aws ecs register-task-definition \
+            --cli-input-json file://backend-task-updated.json
 
-      - name: Build Frontend Image
+      - name: Deploy backend
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $BACKEND_SERVICE \
+            --force-new-deployment
+
+      # ---------- FRONTEND ----------
+
+      - name: Build and push frontend image
         run: |
           docker build -t frontend:$IMAGE_TAG ./frontend
-          docker tag frontend:$IMAGE_TAG $FRONTEND_ECR:$IMAGE_TAG
-          docker push $FRONTEND_ECR:$IMAGE_TAG
+          docker tag frontend:$IMAGE_TAG $FRONTEND_REPO:$IMAGE_TAG
+          docker push $FRONTEND_REPO:$IMAGE_TAG
 
-      - name: Render Frontend Task Definition
-        id: frontend-task
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: frontend-task-definition.json
-          container-name: frontend
-          image: ${{ env.FRONTEND_ECR }}:${{ env.IMAGE_TAG }}
+      - name: Get frontend task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition $FRONTEND_TASK \
+            --query taskDefinition > frontend-task.json
 
-      - name: Deploy Frontend to ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: ${{ steps.frontend-task.outputs.task-definition }}
-          service: ${{ env.FRONTEND_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+      - name: Update frontend image
+        run: |
+          jq --arg IMAGE "$FRONTEND_REPO:$IMAGE_TAG" \
+            '.containerDefinitions[0].image=$IMAGE' \
+            frontend-task.json > frontend-task-updated.json
+
+      - name: Register frontend task revision
+        run: |
+          aws ecs register-task-definition \
+            --cli-input-json file://frontend-task-updated.json
+
+      - name: Deploy frontend
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $FRONTEND_SERVICE \
+            --force-new-deployment
