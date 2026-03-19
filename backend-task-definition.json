@@ -1,0 +1,61 @@
+{
+    "containerDefinitions": [
+        {
+            "name": "backend",
+            "image": "949530156500.dkr.ecr.ap-southeast-2.amazonaws.com/backend-repo:latest",
+            "cpu": 0,
+            "memory": 512,
+            "portMappings": [
+                {
+                    "name": "backend-5000-tcp",
+                    "containerPort": 5000,
+                    "hostPort": 5000,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "JWT_SECRET",
+                    "value": "JWT_SECRET_PLACEHOLDER"
+                },
+                {
+                    "name": "DATABASE_URL",
+                    "value": "DATABASE_URL_PLACEHOLDER"
+                }
+            ],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/backend-task",
+                    "awslogs-create-group": "true",
+                    "awslogs-region": "ap-southeast-2",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "systemControls": []
+        }
+    ],
+    "family": "backend-task",
+    "executionRoleArn": "arn:aws:iam::949530156500:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "enableFaultInjection": false,
+    "tags": []
+}
