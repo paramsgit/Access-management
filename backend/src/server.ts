@@ -16,7 +16,9 @@ async function startServer() {
     console.log(`[database] ✓ Connected to database successfully`);
 
     app.listen(Number(PORT), () => {
-      console.log(`[boot] server listening on http://localhost:${PORT}`);
+      console.log(
+        `[boot] server listening 19march on http://localhost:${PORT}`,
+      );
     });
   } catch (error) {
     console.error(`[database] ✗ Failed to connect to database:`, error);

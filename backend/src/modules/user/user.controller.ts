@@ -16,7 +16,7 @@ export class UserController {
       res.cookie("access_token", data.token, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        sameSite: "none",
       });
       res.json({ user: data.user, success: true });
     } catch (e: any) {
