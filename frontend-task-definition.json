@@ -18,7 +18,7 @@
             "environment": [
                 {
                     "name": "VITE_API_URL",
-                    "value": "VITE_API_URL_PLACEHOLDER"
+                    "value": "http://api.files.params.online"
                 }
             ],
             "environmentFiles": [],
