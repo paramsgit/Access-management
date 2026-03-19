@@ -3,7 +3,6 @@ import { useFile, useUpdateFileContent } from "@/hooks/useFile";
 import { useEffect, useState } from "react";
 import TextEditorSection from "./TextEditorSection";
 import { Button } from "@/components/ui/button";
-import { defaultLexicalJson } from "text-editor/src/lib/helper";
 
 const FileDetailsPage = () => {
   const { id } = useParams();

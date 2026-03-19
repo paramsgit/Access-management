@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -15,7 +14,7 @@ import { Button } from "@/components/ui/button";
 
 type Props = {};
 
-const NewFileForm = (props: Props) => {
+const NewFileForm = (_: Props) => {
   const [name, setName] = useState("");
   return (
     <div>
