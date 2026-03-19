@@ -18,11 +18,11 @@
             "environment": [
                 {
                     "name": "JWT_SECRET",
-                    "value": "JWT_SECRET_PLACEHOLDER"
+                    "valueFrom": "arn:aws:secretsmanager:ap-southeast-2:949530156500:secret:Backend_secret-z9P252:DATABASE_URL::"
                 },
                 {
                     "name": "DATABASE_URL",
-                    "value": "DATABASE_URL_PLACEHOLDER"
+                    "valueFrom": "arn:aws:secretsmanager:ap-southeast-2:949530156500:secret:Backend_secret-z9P252:JWT_SECRET::"
                 }
             ],
             "environmentFiles": [],
