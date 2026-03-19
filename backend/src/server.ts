@@ -17,7 +17,7 @@ async function startServer() {
 
     app.listen(Number(PORT), () => {
       console.log(
-        `[boot] server listening 19,march on http://localhost:${PORT}`,
+        `[boot] server listening 19 march 0.1 on http://localhost:${PORT}`,
       );
     });
   } catch (error) {
