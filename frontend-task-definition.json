@@ -21,7 +21,7 @@
                     "value": "http://api.files.params.online"
                 },
                 {
-                    "name": "ENV",
+                    "name": "VITE_ENV",
                     "value": "production"
                 }
             ],
