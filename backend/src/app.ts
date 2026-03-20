@@ -5,6 +5,7 @@ import authRoutes from "./modules/auth/auth.routes";
 import userRoutes from "./modules/user/user.routes";
 import fileRoutes from "./modules/file/file.routes";
 import allowedOrigins from "./config/allowedOrigin";
+import AWSXRay from "aws-xray-sdk";
 
 const app = express();
 app.use(cookieParser());
@@ -18,6 +19,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(AWSXRay.express.openSegment("backend-api"));
 
 // Health check endpoint
 app.get("/health", (req, res) => {
@@ -27,5 +29,7 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/files", fileRoutes);
+
+app.use(AWSXRay.express.closeSegment());
 
 export default app;
