@@ -31,6 +31,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true });
     try {
       const data = await authApi.login({ email, password });
+      if (data?.token) {
+        localStorage?.setItem("token", data?.token);
+      }
       set({ user: data.user, loading: false });
     } catch (error) {
       set({ user: null, loading: false });
@@ -41,5 +44,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: async () => {
     await authApi.logout();
     set({ user: null });
+    localStorage?.removeItem("token");
   },
 }));

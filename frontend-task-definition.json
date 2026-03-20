@@ -19,6 +19,10 @@
                 {
                     "name": "VITE_API_URL",
                     "value": "http://api.files.params.online"
+                },
+                {
+                    "name": "ENV",
+                    "value": "production"
                 }
             ],
             "environmentFiles": [],

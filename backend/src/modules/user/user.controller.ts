@@ -18,7 +18,8 @@ export class UserController {
         secure: true,
         sameSite: "none",
       });
-      res.json({ user: data.user, success: true });
+      // TODO: remove token
+      res.json({ user: data.user, success: true, token: data.token });
     } catch (e: any) {
       res.status(401).json({ message: e.message });
     }
