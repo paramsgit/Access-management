@@ -1,3 +1,9 @@
+import AWSXRay from "aws-xray-sdk";
+import http from "http";
+import https from "https";
+
+AWSXRay.captureHTTPsGlobal(http);
+AWSXRay.captureHTTPsGlobal(https);
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -5,9 +11,10 @@ import authRoutes from "./modules/auth/auth.routes";
 import userRoutes from "./modules/user/user.routes";
 import fileRoutes from "./modules/file/file.routes";
 import allowedOrigins from "./config/allowedOrigin";
-import AWSXRay from "aws-xray-sdk";
 
 const app = express();
+app.use(AWSXRay.express.openSegment("backend-api"));
+
 app.use(cookieParser());
 app.use(
   cors({
@@ -19,7 +26,6 @@ app.use(
 );
 
 app.use(express.json());
-app.use(AWSXRay.express.openSegment("backend-api"));
 
 // Health check endpoint
 app.get("/health", (req, res) => {

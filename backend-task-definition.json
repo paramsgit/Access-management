@@ -50,6 +50,30 @@
                 "secretOptions": []
             },
             "systemControls": []
+        },
+        {
+            "name": "xray-daemon",
+            "image": "public.ecr.aws/xray/aws-xray-daemon:latest",
+            "cpu": 33,
+            "memory": 512,
+            "portMappings": [
+                {
+                    "containerPort": 2000,
+                    "hostPort": 2000,
+                    "protocol": "udp"
+                }
+            ],
+            "essential": false,
+            "environment": [
+                {
+                    "name": "AWS_XRAY_DAEMON_ADDRESS",
+                    "value": "127.0.0.1:2000"
+                }
+            ],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "systemControls": []
         }
     ],
     "family": "backend-task",
